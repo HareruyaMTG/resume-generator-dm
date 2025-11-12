@@ -5,7 +5,7 @@
         <div class="preview-wrapper">
           <img
             :src="imgSrc"
-            alt="ポケカ履歴書"
+            alt="デュエマ履歴書"
             width="800"
             height="450"
             class="preview"
@@ -15,33 +15,15 @@
               <konva-image :config="{ image: image.background }" />
               <konva-image :config="playerIconConfig" />
               <konva-text :config="playerNameConfig" />
-              <konva-image
-                v-if="formInput.gender !== '指定しない'"
-                :config="genderConfig"
-              />
-              <konva-image
-                :config="{ image: image.gender }"
-                v-if="formInput.gender !== '指定しない'"
-              />
               <konva-text :config="activityAreaConfig" />
               <konva-image
                 v-for="(item, index) in regulationConfig"
                 :key="`regulation-${index}`"
                 :config="item"
               />
-              <konva-text
-                v-if="formInput.regulation.includes('その他')"
-                :config="otherRegulationConfig"
-              />
-              <konva-text :config="historyConfig" />
               <konva-image
                 v-for="(item, index) in noticeConfig"
                 :key="`notice-${index}`"
-                :config="item"
-              />
-              <konva-image
-                v-for="(item, index) in favoriteTypeConfig"
-                :key="`type-${index}`"
                 :config="item"
               />
               <konva-image
@@ -49,7 +31,12 @@
                 :key="`style-${index}`"
                 :config="item"
               />
-              <konva-text :config="favoritePokemonConfig" />
+              <konva-image
+                v-for="(item, index) in snsConfig"
+                :key="`style-${index}`"
+                :config="item"
+              />
+              <konva-text :config="favoriteCardConfig" />
               <konva-text :config="freeSpaceConfig" />
             </konva-layer>
           </konva-stage>
@@ -121,44 +108,16 @@
                 :clearable="false"
               />
               <v-text-field
-                label="プレイヤーネーム"
+                label="ハンドルネーム"
                 v-model="formInput.playerName"
               />
-              <v-select
-                label="性別"
-                v-model="formInput.gender"
-                :items="genderOptions"
-              />
-              <v-text-field label="活動地域" v-model="formInput.activityArea" />
-              <v-select
-                label="レギュレーション"
-                v-model="formInput.regulation"
-                :items="regulationOptions"
-                multiple
-                chips
-                deletable-chips
+              <v-text-field
+                label="活動地域/活動店舗"
+                v-model="formInput.activityArea"
               />
               <v-text-field
-                v-if="formInput.regulation.includes('その他')"
-                label="その他のレギュレーション"
-                v-model="formInput.otherRegulation"
-              />
-              <v-text-field label="ポケカ歴" v-model="formInput.history" />
-              <v-select
-                label="要望&お知らせ"
-                v-model="formInput.notice"
-                :items="noticeOptions"
-                multiple
-                chips
-                deletable-chips
-              />
-              <v-select
-                label="好きなタイプ"
-                v-model="formInput.favoriteType"
-                :items="favoriteTypeOptions"
-                multiple
-                chips
-                deletable-chips
+                label="好きな文明/推しカード"
+                v-model="formInput.favoriteCard"
               />
               <v-select
                 label="プレイスタイル"
@@ -168,9 +127,29 @@
                 chips
                 deletable-chips
               />
-              <v-text-field
-                label="好きなポケモン"
-                v-model="formInput.favoritePokemon"
+              <v-select
+                label="レギュレーション"
+                v-model="formInput.regulation"
+                :items="regulationOptions"
+                multiple
+                chips
+                deletable-chips
+              />
+              <v-select
+                label="要望&お知らせ"
+                v-model="formInput.notice"
+                :items="noticeOptions"
+                multiple
+                chips
+                deletable-chips
+              />
+              <v-select
+                label="SNS登録の有無"
+                v-model="formInput.sns"
+                :items="snsOptions"
+                multiple
+                chips
+                deletable-chips
               />
               <v-textarea
                 label="フリースペース"
@@ -181,7 +160,7 @@
           <footer class="footer footer-md d-none d-md-block">
             運営:
             <a
-              href="https://www.hareruya2.com"
+              href="https://www.hareruya3.com"
               target="_blank"
               rel="noopener"
               data-ga="link-hareruya"
@@ -198,7 +177,7 @@
               </div>
               <img
                 :src="imgSrc"
-                alt="ポケカ履歴書"
+                alt="デュエマ履歴書"
                 width="800"
                 height="450"
                 class="preview"
@@ -236,7 +215,7 @@
           <footer class="footer d-block d-md-none">
             運営:
             <a
-              href="https://www.hareruya2.com"
+              href="https://www.hareruya3.com"
               target="_blank"
               rel="noopener"
               data-ga="link-hareruya"
@@ -320,66 +299,59 @@ export default {
       font: "Yusei Magic",
       playerIcon: "",
       playerName: "",
-      gender: "指定しない",
       activityArea: "",
-      regulation: "",
-      otherRegulation: "",
-      history: "",
+      regulation: [],
       playStyle: [],
+      sns: [],
       notice: [],
-      favoriteType: [],
-      favoritePokemon: "",
+      favoriteCard: "",
       freeSpace: "",
     },
     backgroundOptions: [
-      { text: "白", value: "w" },
-      { text: "赤", value: "r" },
-      { text: "緑", value: "g" },
-      { text: "青", value: "b" },
+      { text: "光", value: "w" },
+      { text: "水", value: "u" },
+      { text: "闇", value: "b" },
+      { text: "火", value: "r" },
+      { text: "自然", value: "g" },
+      { text: "ゼロ", value: "z" },
+      { text: "炎", value: "f" },
     ],
     fillColor: {
       w: "#FBE5A5",
-      b: "#3054AC",
-      r: "#F80E00",
-      g: "#179517",
+      u: "#3054AC",
+      b: "#F80E00",
+      r: "#179517",
+      g: "#3054AC",
+      z: "#F80E00",
+      f: "#179517",
     },
-    genderOptions: ["男性", "女性", "指定しない"],
-    regulationOptions: ["スタンダード", "エクストラ", "その他"],
+    regulationOptions: [
+      "オリジナル",
+      "アドバンス",
+      "デュエパレベル1",
+      "デュエパレベル2",
+      "デュエパレベル3",
+      "その他",
+    ],
     noticeOptions: [
       "対戦したい",
       "大会に参加したい",
-      "雑談したい",
+      "デュエマ雑談したい",
       "デッキ相談したい",
-      "YouTubeやってます",
-      "ブログやってます",
-      "Twitterやってます",
+      "youtubeやってます",
+      "デュエプレやってます",
       "コレクション自慢したい",
-    ],
-    favoriteTypeOptions: [
-      "草",
-      "炎",
-      "水",
-      "雷",
-      "超",
-      "闘",
-      "悪",
-      "鋼",
-      "フェアリー",
-      "ドラゴン",
-      "無色",
     ],
     playStyleOptions: [
       "初心者",
       "カジュアル",
       "競技",
-      "親子",
-      "対戦",
-      "雑談",
-      "大会",
-      "交流会",
-      "リモート対戦",
-      "相談",
-      "コレクション",
+    ],
+    snsOptions: [
+      "X",
+      "インスタ",
+      "LINE",
+      "Discord",
     ],
     stageConfig: {
       width: 800,
@@ -389,7 +361,6 @@ export default {
       check: null,
       checkW: null,
       background: null,
-      gender: null,
     },
   }),
   computed: {
@@ -413,109 +384,82 @@ export default {
       };
     },
     playerIconConfig() {
-      const x = 16;
-      const y = 63;
-      const size = 148;
+      const x = 19;
+      const y = 13;
+      const size_x = 148;
+      const size_y = 142;
       const image = this.croppedIcon;
       return {
         image,
         x,
         y,
-        width: size,
-        height: size,
+        width: size_x,
+        height: size_y,
       };
     },
     playerNameConfig() {
       const text = this.formInput.playerName;
-      const fontSize = fontSizeAdjustment(text, 10, 240);
-      const x = 200;
-      const y = 110 - fontSize / 2;
+      const fontSize = fontSizeAdjustment(text, 13, 312);
+      const x = 190;
+      const y = 58 - fontSize / 2;
       return { ...this.fontConfig, text, fontSize, x, y };
-    },
-    genderConfig() {
-      const config = { ...this.checkConfig, x: 304, y: 72 };
-      if (this.formInput.gender === "女性") {
-        config.x = 347;
-      }
-      if (this.formInput.background !== "w") {
-        config.image = this.image.checkW;
-      }
-      return config;
     },
     activityAreaConfig() {
       const text = this.formInput.activityArea;
-      const fontSize = fontSizeAdjustment(text, 14, 336);
-      const x = 459;
-      const y = 110 - fontSize / 2;
+      const fontSize = fontSizeAdjustment(text, 13, 312);
+      const x = 490;
+      const y = 58 - fontSize / 2;
       return { ...this.fontConfig, text, fontSize, x, y };
     },
-    regulationConfig() {
-      const regulationArray = [];
-      if (this.formInput.regulation.includes("スタンダード")) {
-        regulationArray.push({ ...this.checkConfig, x: 208, y: 174 });
-      }
-      if (this.formInput.regulation.includes("エクストラ")) {
-        regulationArray.push({ ...this.checkConfig, x: 317, y: 174 });
-      }
-      if (this.formInput.regulation.includes("その他")) {
-        regulationArray.push({ ...this.checkConfig, x: 208, y: 192 });
-      }
-      return regulationArray;
-    },
-    otherRegulationConfig() {
-      const text = this.formInput.otherRegulation;
-      const fontSize = 14;
-      const x = 282;
-      const y = 192;
+    favoriteCardConfig() {
+      const text = this.formInput.favoriteCard;
+      const fontSize = fontSizeAdjustment(text, 27, 648);
+      const x = 190;
+      const y = 136 - fontSize / 2;
       return { ...this.fontConfig, text, fontSize, x, y };
-    },
-    historyConfig() {
-      const text = this.formInput.history;
-      const fontSize = fontSizeAdjustment(text, 14, 336);
-      const x = 459;
-      const y = 190 - fontSize / 2;
-      return { ...this.fontConfig, text, fontSize, x, y };
-    },
-    noticeConfig() {
-      const noticeArray = [];
-      const x = 21;
-      this.formInput.notice.forEach((item) => {
-        const index = this.noticeOptions.indexOf(item);
-        noticeArray.push({ ...this.checkConfig, x, y: 255 + 23 * index });
-      });
-      return noticeArray;
-    },
-    favoriteTypeConfig() {
-      const typeArray = [];
-      const x = 189;
-      this.formInput.favoriteType.forEach((item) => {
-        const index = this.favoriteTypeOptions.indexOf(item);
-        typeArray.push({ ...this.checkConfig, x, y: 255 + 16 * index });
-      });
-      return typeArray;
     },
     playStyleConfig() {
       const styleArray = [];
-      const x = 330;
+      const x = 26;
       this.formInput.playStyle.forEach((item) => {
         const index = this.playStyleOptions.indexOf(item);
-        styleArray.push({ ...this.checkConfig, x, y: 255 + 16 * index });
+        styleArray.push({ ...this.checkConfig, x, y: 202 + 29 * index });
       });
       return styleArray;
     },
-    favoritePokemonConfig() {
-      const text = this.formInput.favoritePokemon;
-      const fontSize = fontSizeAdjustment(text, 15, 360);
-      const x = 449;
-      const y = 270 - fontSize / 2;
-      return { ...this.fontConfig, text, fontSize, x, y };
+    regulationConfig() {
+      const regulationArray = [];
+      const x = 171;
+      this.formInput.regulation.forEach((item) => {
+        const index = this.regulationOptions.indexOf(item);
+        regulationArray.push({ ...this.checkConfig, x, y: 204 + 41.75 * index });
+      });
+      return regulationArray;
+    },
+    noticeConfig() {
+      const noticeArray = [];
+      const x = 328;
+      this.formInput.notice.forEach((item) => {
+        const index = this.noticeOptions.indexOf(item);
+        noticeArray.push({ ...this.checkConfig, x, y: 204 + 35 * index });
+      });
+      return noticeArray;
+    },
+    snsConfig() {
+      const styleArray = [];
+      const x = 26;
+      this.formInput.sns.forEach((item) => {
+        const index = this.snsOptions.indexOf(item);
+        styleArray.push({ ...this.checkConfig, x, y: 328 + 28.25 * index });
+      });
+      return styleArray;
     },
     freeSpaceConfig() {
       const text = this.formInput.freeSpace;
-      const x = 449;
-      const y = 330;
-      const width = 330;
-      const height = 100;
+      const x = 515;
+      const y = 195;
+      const width = 254;
+      const height = 200;
       return {
         ...this.fontConfig,
         text,
@@ -570,14 +514,10 @@ export default {
       this.mountImage(require(`@/assets/bg_${color}.png`), "background");
       this.mountImage(require(`@/assets/check.png`), "check");
       this.mountImage(require(`@/assets/check_w.png`), "checkW");
-      this.mountImage(
-        require(`@/assets/gender_${color === "w" ? "b" : "w"}.png`),
-        "gender"
-      );
     },
     saveImage() {
       const link = document.createElement("a");
-      link.download = "pcgresume";
+      link.download = "dmresume";
       link.href = this.imgSrc;
       document.body.appendChild(link);
       link.click();
@@ -588,7 +528,7 @@ export default {
       this.formInput.notice.forEach((option) => {
         notice = notice + "%20%23" + option;
       });
-      const shareURL = `https://twitter.com/intent/tweet?url=https://pcgresume.hareruya.app&text=%20%23ポケカ履歴書${notice}`;
+      const shareURL = `https://twitter.com/intent/tweet?url=https://pcgresume.hareruya.app&text=%20%23デュエマ履歴書${notice}`;
       window.open(shareURL);
     },
   },
