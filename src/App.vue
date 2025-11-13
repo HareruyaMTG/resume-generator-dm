@@ -5,7 +5,7 @@
         <div class="preview-wrapper">
           <img
             :src="imgSrc"
-            alt="デュエマ履歴書"
+            alt="デュエマプロフィール"
             width="800"
             height="450"
             class="preview"
@@ -177,7 +177,7 @@
               </div>
               <img
                 :src="imgSrc"
-                alt="デュエマ履歴書"
+                alt="デュエマプロフィール"
                 width="800"
                 height="450"
                 class="preview"
@@ -528,7 +528,7 @@ export default {
       this.formInput.notice.forEach((option) => {
         notice = notice + "%20%23" + option;
       });
-      const shareURL = `https://twitter.com/intent/tweet?url=https://pcgresume.hareruya.app&text=%20%23デュエマ履歴書${notice}`;
+      const shareURL = `https://twitter.com/intent/tweet?url=https://dmresume.hareruya.app&text=%20%23デュエマプロフィール${notice}`;
       window.open(shareURL);
     },
   },
