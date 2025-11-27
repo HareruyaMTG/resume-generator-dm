@@ -7,7 +7,7 @@ import VueGtm from "@gtm-support/vue2-gtm";
 Vue.config.productionTip = false;
 Vue.use(VueKonva, { prefix: "Konva" });
 Vue.use(VueGtm, {
-  id: "GTM-M9F8CB4",
+  id: "GTM-PNX2HLFX",
 });
 
 new Vue({
